@@ -1,4 +1,4 @@
-package com.example.alarm.domain.alarmManager
+package com.example.alarm.domain.alarmManagerRing
 
 
 import android.Manifest
@@ -16,11 +16,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.alarm.R
 import com.example.alarm.data.Constants
 import com.example.alarm.di.App
-import android.content.res.Configuration
-import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
+
 class BroadcastForAlarm : BroadcastReceiver() {
     private lateinit var app:App
     private val tag:String = "BroadcastForAlarm"
@@ -29,7 +25,6 @@ class BroadcastForAlarm : BroadcastReceiver() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        val name = intent?.getStringExtra(Constants.IntentAlarmName)
         val ringtoneUriString = intent?.getStringExtra(Constants.IntentAlarm)
         val alarmId = intent?.getStringExtra(Constants.IntentAlarmId)
 
@@ -39,6 +34,8 @@ class BroadcastForAlarm : BroadcastReceiver() {
         val intentForService = Intent(context,MyAlarmDialogActivity::class.java)
         intentForService.putExtra(Constants.IntentAlarm,ringtoneUriString)
         intentForService.putExtra(Constants.IntentAlarmId,alarmId)
+        intentForService.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // Add this line
+
         // Starting foreground service on Android Oreo and above requires the startForegroundService method
 //        context?.startForegroundService(intentForService)
         context?.startActivity(intentForService)

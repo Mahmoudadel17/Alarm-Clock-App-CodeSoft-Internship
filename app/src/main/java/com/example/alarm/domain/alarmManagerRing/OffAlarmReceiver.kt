@@ -1,4 +1,4 @@
-package com.example.alarm.domain.alarmManager
+package com.example.alarm.domain.alarmManagerRing
 
 
 import android.content.BroadcastReceiver

@@ -1,4 +1,4 @@
-package com.example.alarm.domain.alarmManager
+package com.example.alarm.domain.alarmManagerRing
 
 
 import android.content.Context
@@ -6,14 +6,20 @@ import android.graphics.PixelFormat
 import android.media.Ringtone
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.compose.ui.platform.*
+import com.example.alarm.domain.repositorys.AlarmRepository
 import com.example.alarm.presintation.components.AlarmConfirmationDialog
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class Window(context: Context, ringtoneString: String, alarmId: String) {
+class Window(context: Context, ringtoneString: String, alarmId: String, repo: AlarmRepository) {
     private var overlayView: View
     private var overlayParams: WindowManager.LayoutParams
     private var windowManager: WindowManager
@@ -38,8 +44,10 @@ class Window(context: Context, ringtoneString: String, alarmId: String) {
         val composeView = ComposeView(context)
         composeView.setContent {
             AlarmConfirmationDialog({
+                offAlarmAction(alarmId.toInt(),repo)
                 close()
             },{
+                snoozeAction()
                 close()
             })
         }
@@ -61,11 +69,17 @@ class Window(context: Context, ringtoneString: String, alarmId: String) {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.P)
     fun open() {
+
+
         try {
             if (overlayView.windowToken == null) {
                 if (overlayView.parent == null) {
                     windowManager.addView(overlayView, overlayParams)
+                    // Start the ringtone
+                    ringtone.play()
+                    ringtone.isLooping = true
                 }
             }
         } catch (e: Exception) {
@@ -73,11 +87,41 @@ class Window(context: Context, ringtoneString: String, alarmId: String) {
         }
     }
 
-    fun close() {
+    private fun close() {
         try {
             windowManager.removeView(overlayView)
+
+            // close the ringtone
+            if (ringtone.isPlaying) {
+                ringtone.stop()
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
+
+
+    private fun offAlarmAction(alarmId:Int,repo: AlarmRepository){
+        CoroutineScope(Dispatchers.IO).launch {
+            // get alarm from database
+            val alarm = repo.getAlarm(alarmId)
+            repo.removeAlarmById(alarmId)
+
+            // if alarm not repeated make it off
+            val isRepeating = alarm.isRepeated
+            if (!isRepeating){
+                alarm.isOn = alarm.isOn.not()
+                // update alarm in database
+                repo.addAlarm(alarm)
+            }
+        }
+    }
+
+
+    private fun snoozeAction(){
+
+    }
+
+
+
 }

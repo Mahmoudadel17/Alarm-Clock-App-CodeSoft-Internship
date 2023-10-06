@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.alarm.data.Constants
 import com.example.alarm.data.local.Alarm
-import com.example.alarm.domain.alarmManager.BroadcastForAlarm
+import com.example.alarm.domain.alarmManagerRing.BroadcastForAlarm
 import com.example.alarm.presintation.navigation.AppNavigate
 import com.example.alarm.presintation.screensPreview.alarmScreen.AlarmScreenViewModel
 import com.example.alarm.presintation.screensPreview.newAlarmScreen.NewAlarmScreenViewModel
@@ -59,7 +59,6 @@ class MainActivity() : ComponentActivity()  {
 
     private val addNewAlarm = fun(alarm: Alarm){
         val intent = Intent(this, BroadcastForAlarm::class.java)
-        intent.putExtra(Constants.IntentAlarmName,"alarm")
         intent.putExtra(Constants.IntentAlarm,alarm.ringtone.toString())
         intent.putExtra(Constants.IntentAlarmId,alarm.id.toString())
 
@@ -98,7 +97,6 @@ class MainActivity() : ComponentActivity()  {
 
     private val removeAlarm =  fun(alarm: Alarm){
         val intent = Intent(this, BroadcastForAlarm::class.java)
-        intent.putExtra(Constants.IntentAlarmName,"alarm")
 
         val alarmOperation = PendingIntent.getBroadcast(
             this,

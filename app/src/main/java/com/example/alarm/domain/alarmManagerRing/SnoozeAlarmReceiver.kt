@@ -1,4 +1,4 @@
-package com.example.alarm.domain.alarmManager
+package com.example.alarm.domain.alarmManagerRing
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -19,7 +19,7 @@ class SnoozeAlarmReceiver : BroadcastReceiver() {
         }
         // Remove the notification
 
-        val notificationManager = NotificationManagerCompat.from(context!!)
+        val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(1)
     }
 

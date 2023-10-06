@@ -21,7 +21,7 @@
         android:theme="@style/Theme.Alarm"
         tools:targetApi="31">
         <activity
-            android:name=".domain.alarmManager.MyAlarmDialogActivity"
+            android:name=".domain.alarmManagerRing.MyAlarmDialogActivity"
             android:exported="false"
             android:label="@string/title_activity_my_alarm_dialog"
             android:theme="@style/AppTheme" />
@@ -40,7 +40,7 @@
 
 
         <receiver
-            android:name=".domain.alarmManager.BroadcastForAlarm"
+            android:name=".domain.alarmManagerRing.BroadcastForAlarm"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.START_FOREGROUND_SERVICE" />
@@ -56,12 +56,12 @@
         </receiver>
 
         <service
-            android:name=".domain.alarmManager.ForegroundService"
+            android:name=".domain.alarmManagerRing.ForegroundService"
             android:enabled="true"
             android:exported="true" />
 
-        <receiver android:name=".domain.alarmManager.OffAlarmReceiver" />
-        <receiver android:name=".domain.alarmManager.SnoozeAlarmReceiver" />
+        <receiver android:name=".domain.alarmManagerRing.OffAlarmReceiver" />
+        <receiver android:name=".domain.alarmManagerRing.SnoozeAlarmReceiver" />
     </application>
 
 </manifest>
