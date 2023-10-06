@@ -1,23 +1,17 @@
 package com.example.alarm.domain.alarmManagerRing
 
-import android.app.Notification
-import android.app.NotificationManager
+import android.Manifest
 import android.app.Service
 import android.content.Intent
-import android.os.Build
-import android.os.Handler
+import android.content.pm.PackageManager
 import android.os.IBinder
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.alarm.R
 import com.example.alarm.data.Constants
 import com.example.alarm.domain.repositorys.AlarmRepository
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
@@ -37,9 +31,9 @@ class ForegroundService : Service() {
             val alarmId = intent.getStringExtra(Constants.IntentAlarmId)
             if (ringtoneString != null && alarmId != null){
                 startMyOwnForeground()
-
-                val window = Window(this,ringtoneString,alarmId,repo)
-                window.open()
+//
+//                val window = Window(this,ringtoneString,alarmId,repo)
+//                window.open()
 
             }
         }
@@ -59,11 +53,14 @@ class ForegroundService : Service() {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
             .build()
-        startForeground(1, notification)
-        val handler = Handler()
-        handler.postDelayed({
-            // Code to execute after a delay of 30 seconds
-            stopForeground(true)
-        }, 30_000)
+
+        val notificationManager = NotificationManagerCompat.from(this)
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) { return }
+        notificationManager.notify(1, notification)
     }
 }

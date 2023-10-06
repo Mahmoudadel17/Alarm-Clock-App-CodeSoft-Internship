@@ -54,7 +54,7 @@ class OffAlarmReceiver : BroadcastReceiver() {
             app.ringtone?.stop()
         }
         // Remove the notification
-        val notificationManager = NotificationManagerCompat.from(context!!)
+        val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(1)
     }
 

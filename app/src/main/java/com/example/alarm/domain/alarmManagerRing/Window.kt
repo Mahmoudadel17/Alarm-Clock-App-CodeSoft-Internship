@@ -19,7 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class Window(context: Context, ringtoneString: String, alarmId: String, repo: AlarmRepository) {
+class Window(context: Context, ringtoneString: String, alarmId: Int?, repo: AlarmRepository) {
     private var overlayView: View
     private var overlayParams: WindowManager.LayoutParams
     private var windowManager: WindowManager
@@ -44,7 +44,9 @@ class Window(context: Context, ringtoneString: String, alarmId: String, repo: Al
         val composeView = ComposeView(context)
         composeView.setContent {
             AlarmConfirmationDialog({
-                offAlarmAction(alarmId.toInt(),repo)
+                if (alarmId != null) {
+                    offAlarmAction(alarmId.toInt(),repo)
+                }
                 close()
             },{
                 snoozeAction()

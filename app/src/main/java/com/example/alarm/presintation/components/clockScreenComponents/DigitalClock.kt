@@ -15,7 +15,8 @@ fun DigitalClock(
     amOrPm: String,
 ) {
     val currentDateTime = LocalDateTime.now()
-    val newHour = if (hour.length==2 && hour[0] == '0') hour[1]else hour
+    var newHour = if (hour.length==2 && hour[0] == '0') hour[1]else hour
+    if(newHour=='0'){newHour = "12" }
     Text(
         text = "Cairo, Egypt", style = MaterialTheme.typography.displaySmall.merge(
             TextStyle(
