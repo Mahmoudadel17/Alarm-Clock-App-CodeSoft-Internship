@@ -108,14 +108,17 @@ fun TimeShowSelected(context: Context,hour:Int,minute:Int,onTimeSelected:(Int,In
     if (newHour == 0){
         newHour = 12
     }
-
+    var newMinute = minute.toString()
+    if(newMinute.length ==1){
+        newMinute = "0${minute}"
+    }
     Column(
         modifier = Modifier.padding(top = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text ="${newHour}:${minute} AM",
+            text ="${newHour}:${newMinute} AM",
             style = MaterialTheme.typography.displayLarge.merge(
                 TextStyle(
                     color = MaterialTheme.colorScheme.tertiary
