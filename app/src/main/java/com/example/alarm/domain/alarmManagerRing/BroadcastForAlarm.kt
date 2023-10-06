@@ -31,14 +31,13 @@ class BroadcastForAlarm : BroadcastReceiver() {
         Log.d(tag,"onHandleIntent: 1111111111111111111111111 $alarmId" )
 
 
-        val intentForService = Intent(context,MyAlarmDialogActivity::class.java)
+        val intentForService = Intent(context,ForegroundService::class.java)
         intentForService.putExtra(Constants.IntentAlarm,ringtoneUriString)
         intentForService.putExtra(Constants.IntentAlarmId,alarmId)
-        intentForService.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // Add this line
 
         // Starting foreground service on Android Oreo and above requires the startForegroundService method
-//        context?.startForegroundService(intentForService)
-        context?.startActivity(intentForService)
+        context?.startForegroundService(intentForService)
+//        context?.startActivity(intentForService)
 
 //        try {
 //            // Parse the ringtone Uri string to a Uri
@@ -58,7 +57,6 @@ class BroadcastForAlarm : BroadcastReceiver() {
     }
 
     // this notification with actions
-    @RequiresApi(Build.VERSION_CODES.P)
     private fun createNotification(context: Context, alarmId:Int) {
 
         // Create two actions

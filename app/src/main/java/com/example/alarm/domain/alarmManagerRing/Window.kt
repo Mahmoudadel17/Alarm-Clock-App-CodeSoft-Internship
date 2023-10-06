@@ -69,7 +69,6 @@ class Window(context: Context, ringtoneString: String, alarmId: String, repo: Al
 
     }
 
-    @RequiresApi(Build.VERSION_CODES.P)
     fun open() {
 
 

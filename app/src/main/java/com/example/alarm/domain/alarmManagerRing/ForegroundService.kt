@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.os.Build
+import android.os.Handler
 import android.os.IBinder
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -22,15 +23,14 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ForegroundService : Service() {
-
     @Inject
     lateinit var repo: AlarmRepository
+
     override fun onBind(intent: Intent): IBinder {
         throw UnsupportedOperationException("Not yet implemented")
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.P)
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null) {
             val ringtoneString = intent.getStringExtra(Constants.IntentAlarm)
@@ -40,7 +40,6 @@ class ForegroundService : Service() {
 
                 val window = Window(this,ringtoneString,alarmId,repo)
                 window.open()
-
 
             }
         }
@@ -61,5 +60,10 @@ class ForegroundService : Service() {
             .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
             .build()
         startForeground(1, notification)
+        val handler = Handler()
+        handler.postDelayed({
+            // Code to execute after a delay of 30 seconds
+            stopForeground(true)
+        }, 30_000)
     }
 }
