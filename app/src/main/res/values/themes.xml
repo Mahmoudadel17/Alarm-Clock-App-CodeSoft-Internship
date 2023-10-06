@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.Alarm" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowDisablePreview">true</item>
+    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize theme attributes if needed -->
+        <item name="android:windowDisablePreview">true</item>
+
+    </style>
+
+
+</resources>

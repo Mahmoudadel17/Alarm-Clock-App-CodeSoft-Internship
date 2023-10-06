@@ -1,0 +1,83 @@
+package com.example.alarm.domain.alarmManager
+
+
+import android.content.Context
+import android.graphics.PixelFormat
+import android.media.Ringtone
+import android.media.RingtoneManager
+import android.net.Uri
+import android.util.Log
+import android.view.Gravity
+import android.view.View
+import android.view.WindowManager
+import androidx.compose.ui.platform.*
+import com.example.alarm.presintation.components.AlarmConfirmationDialog
+
+class Window(context: Context, ringtoneString: String, alarmId: String) {
+    private var overlayView: View
+    private var overlayParams: WindowManager.LayoutParams
+    private var windowManager: WindowManager
+    private lateinit var ringtone:Ringtone
+    private val tag:String = "Window"
+
+
+    init {
+        try {
+            // Parse the ringtone Uri string to a Uri
+            val ringtoneUri: Uri = Uri.parse(ringtoneString)
+
+            // Now you have a Uri object representing the ringtone
+            // You can use this Uri with RingtoneManager to get a Ringtone instance if needed
+            ringtone = RingtoneManager.getRingtone(context, ringtoneUri)
+
+        } catch (e: Exception) {
+            // Handle any parsing or other exceptions that may occur
+            Log.d(tag,"onHandleIntent: 3333333333333333333333333333" )
+        }
+        // Create a ComposeView to host the Composable content
+        val composeView = ComposeView(context)
+        composeView.setContent {
+            AlarmConfirmationDialog({
+                close()
+            },{
+                close()
+            })
+        }
+
+        // Create the overlay view
+        overlayView = composeView
+
+
+        // Set the layout parameters for the overlay view
+        overlayParams =
+            WindowManager.LayoutParams(
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT
+            )
+
+        overlayParams.gravity = Gravity.CENTER
+        windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
+    }
+
+    fun open() {
+        try {
+            if (overlayView.windowToken == null) {
+                if (overlayView.parent == null) {
+                    windowManager.addView(overlayView, overlayParams)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    fun close() {
+        try {
+            windowManager.removeView(overlayView)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+}
