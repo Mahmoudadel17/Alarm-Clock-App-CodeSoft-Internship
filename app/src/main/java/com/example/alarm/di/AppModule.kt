@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.alarm.data.local.DataBase
 import com.example.alarm.data.repositorys.AlarmRepositoryImpl
+import com.example.alarm.domain.alarmManagerRing.AlarmManager
 import com.example.alarm.domain.repositorys.AlarmRepository
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,9 @@ object AppModule {
     @Singleton
     fun providesAlarmScreenRepository(@ApplicationContext context: Context):AlarmRepository =
         AlarmRepositoryImpl(providesDatabaseDao(providesDatabase(context)))
+
+    @Provides
+    @Singleton
+    fun providesAlarmManager():AlarmManager = AlarmManager()
 
 }

@@ -1,6 +1,7 @@
 package com.example.alarm.presintation.screensPreview.newAlarmScreen
 
 
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.runtime.State
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.alarm.data.local.Alarm
+import com.example.alarm.domain.alarmManagerRing.AlarmManager
 import com.example.alarm.domain.repositorys.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +24,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NewAlarmScreenViewModel @Inject constructor(
     private val repo:AlarmRepository,
+    private val alarmManager: AlarmManager
 )  :ViewModel() {
     private var _state by mutableStateOf(NewAlarmScreenState())
 
@@ -39,7 +42,7 @@ class NewAlarmScreenViewModel @Inject constructor(
         navController.popBackStack()
     }
 
-    fun onCompleteIconClick(navController: NavHostController, addAlarm: (Alarm) -> Unit){
+    fun onCompleteIconClick(context: Context,navController: NavHostController){
         // add alarm to alarmManager and database
         val alarm = Alarm(
             name =  _state.name,
@@ -53,7 +56,7 @@ class NewAlarmScreenViewModel @Inject constructor(
             val databaseAlarm = repo.getAlarmByIdManager(5)
 
             withContext(Dispatchers.Main){
-                addAlarm(databaseAlarm)
+                alarmManager.addNewAlarm(context, databaseAlarm)
                 Log.d("AddAlarmToAlarmManager","<<<<<<<<<< ${databaseAlarm.id} >>>>>>>")
                 navController.popBackStack()
             }

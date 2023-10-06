@@ -1,5 +1,6 @@
 package com.example.alarm.presintation.screensPreview.updateScreen
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
@@ -10,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.alarm.data.local.Alarm
+import com.example.alarm.domain.alarmManagerRing.AlarmManager
 import com.example.alarm.domain.repositorys.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class UpdateScreenViewModel  @Inject constructor(
     private val repo: AlarmRepository,
+    private val alarmManager: AlarmManager
 )  : ViewModel() {
     private var _state by mutableStateOf(UpdateScreenState())
     private var id: Int? = null
@@ -58,9 +61,8 @@ class UpdateScreenViewModel  @Inject constructor(
     }
 
     fun onCompleteIconClick(
+        context: Context,
         navController: NavHostController,
-        addAlarm: (Alarm) -> Unit,
-        removeAlarm: (Alarm) -> Unit
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             id?.let {
@@ -73,11 +75,11 @@ class UpdateScreenViewModel  @Inject constructor(
                 alarm.isRepeated = _state.isRepeated
                 // delete this alarm from alarm manager if it isOn
                 if (alarm.isOn) {
-                    removeAlarm(alarm)
+                    alarmManager.removeAlarm(context,alarm)
                 }
 
                 // add alarm to alarm manager with new update
-                addAlarm(alarm)
+                alarmManager.addNewAlarm(context, alarm)
 
                 // make alarm On
                 alarm.isOn = true
@@ -131,19 +133,21 @@ class UpdateScreenViewModel  @Inject constructor(
             _showDialog.value = false
         }
 
-        fun onAlarmDelete(navController: NavHostController, removeAlarm: (Alarm) -> Unit) {
+        fun onAlarmDelete(context: Context, navController: NavHostController) {
 
             viewModelScope.launch(Dispatchers.IO) {
                 id?.let {
                     val alarm = repo.getAlarm(it)
                     repo.removeAlarmById(it)
                     withContext(Dispatchers.Main) {
-                        removeAlarm(alarm)
+                        alarmManager.removeAlarm(context, alarm)
                         navController.popBackStack()
                     }
                 }
             }
         }
+
+
 
 }
 

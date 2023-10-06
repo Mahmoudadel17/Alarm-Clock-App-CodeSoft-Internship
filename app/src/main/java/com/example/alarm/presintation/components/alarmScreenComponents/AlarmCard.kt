@@ -40,7 +40,14 @@ import com.example.alarm.ui.theme.textInOffMode
 @Composable
 fun AlarmCardItem(alarm: Alarm,onCardClick:(Int)->Unit, onToggleClick: (Alarm) -> Unit) {
     val textColor = if (alarm.isOn) MaterialTheme.colorScheme.tertiary else textInOffMode
-
+    var newHour = if(alarm.hour > 12) alarm.hour - 12 else alarm.hour
+    if (newHour == 0){
+        newHour = 12
+    }
+    var newMinute = alarm.minute.toString()
+    if(newMinute.length ==1){
+        newMinute = "0${alarm.minute}"
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier =  Modifier.padding(vertical = 10.dp, horizontal = 15.dp).clickable {
@@ -52,7 +59,7 @@ fun AlarmCardItem(alarm: Alarm,onCardClick:(Int)->Unit, onToggleClick: (Alarm) -
         Column {
             Row (  verticalAlignment = Alignment.CenterVertically,){
                 Text(
-                    text = if(alarm.hour > 12)"${alarm.hour -12}:${alarm.minute}" else "${alarm.hour}:${alarm.minute}",
+                    text = "${newHour}:${newMinute}",
                     color = textColor,
                     style = MaterialTheme.typography.headlineLarge
                 )

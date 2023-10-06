@@ -104,13 +104,18 @@ fun TitleNewOrUpdate(title:String,onCloseIconClick:()->Unit,onCompleteIconClick:
 
 @Composable
 fun TimeShowSelected(context: Context,hour:Int,minute:Int,onTimeSelected:(Int,Int)->Unit) {
+    var newHour = if(hour > 12) hour - 12 else hour
+    if (newHour == 0){
+        newHour = 12
+    }
+
     Column(
         modifier = Modifier.padding(top = 60.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = if (hour > 12) "${hour - 12}:${minute} PM" else "${hour}:${minute} AM",
+            text ="${newHour}:${minute} AM",
             style = MaterialTheme.typography.displayLarge.merge(
                 TextStyle(
                     color = MaterialTheme.colorScheme.tertiary

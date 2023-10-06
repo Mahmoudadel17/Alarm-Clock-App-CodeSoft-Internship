@@ -25,18 +25,16 @@ fun AppNavigate(
     alarmScreenViewModel: AlarmScreenViewModel,
     newAlarmScreenViewModel: NewAlarmScreenViewModel,
     updateScreenViewModel: UpdateScreenViewModel,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm: (Alarm) -> Unit,
     onThemeSwitchChange: () -> Unit
 ) {
     val navController  = rememberNavController()
     NavHost(navController = navController, startDestination = Screens.Home.route){
         composable(route = Screens.Home.route,){
             HomeScreen(
-                alarmScreenViewModel,navController,darkTheme, onThemeSwitchChange,addAlarm,removeAlarm)
+                alarmScreenViewModel,navController,darkTheme, onThemeSwitchChange)
         }
         composable(route = Screens.NewAlarm.route){
-            NewAlarmScreen(newAlarmScreenViewModel,navController,addAlarm)
+            NewAlarmScreen(newAlarmScreenViewModel,navController)
         }
         composable(route = "${Screens.UpdateAlarm.route}/{alarmId}",arguments = listOf(
             navArgument("alarmId"){type = NavType.IntType}
@@ -44,7 +42,7 @@ fun AppNavigate(
             val id = it.arguments?.getInt("alarmId")
             id?.let {
                 UpdateAlarmScreen(
-                    updateScreenViewModel, navController, id, addAlarm, removeAlarm)
+                    updateScreenViewModel, navController, id)
             }
         }
     }
@@ -56,15 +54,13 @@ fun BottomNavigation(
     alarmScreenViewModel: AlarmScreenViewModel,
     bottomNavController: NavHostController,
     appNavController: NavHostController,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm: (Alarm) -> Unit
 ) {
     NavHost(navController = bottomNavController, startDestination = NavigationScreen.Clock.route ){
         composable(route = NavigationScreen.Clock.route){
             ClockScreen()
         }
         composable(route = NavigationScreen.Alarm.route){
-            AlarmScreen(alarmScreenViewModel,appNavController,addAlarm,removeAlarm)
+            AlarmScreen(alarmScreenViewModel,appNavController)
         }
     }
 

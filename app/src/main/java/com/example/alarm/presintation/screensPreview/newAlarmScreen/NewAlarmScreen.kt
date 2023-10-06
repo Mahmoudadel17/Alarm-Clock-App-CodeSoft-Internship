@@ -25,7 +25,6 @@ import com.example.alarm.presintation.components.TitleNewOrUpdate
 fun NewAlarmScreen(
     vm: NewAlarmScreenViewModel,
     navController: NavHostController,
-    addAlarm: (Alarm) -> Unit
 ) {
     LaunchedEffect(Unit ){
         vm.resetState()
@@ -41,7 +40,7 @@ fun NewAlarmScreen(
     )
     {
         Column (horizontalAlignment = Alignment.CenterHorizontally){
-            TitleNewOrUpdate("New",{vm.onCloseIconClick(navController)},{vm.onCompleteIconClick(navController,addAlarm)})
+            TitleNewOrUpdate("New",{vm.onCloseIconClick(navController)},{vm.onCompleteIconClick(context,navController)})
             TimeShowSelected(context,state.hour,state.minute){hour,minute -> vm.onTimeSelected(hour, minute)}
             AlarmName(state.name){
                 vm.onAlarmNameChange(it)

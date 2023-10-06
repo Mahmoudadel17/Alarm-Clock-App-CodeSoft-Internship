@@ -58,15 +58,13 @@ fun HomeScreen(
     navController: NavHostController,
     darkTheme: Boolean,
     onThemeSwitchChange: () -> Unit,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm: (Alarm) -> Unit
 ) {
     // A surface container using the 'background' color from the theme
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        MainAppScreen(alarmScreenViewModel,navController,darkTheme,addAlarm,removeAlarm){
+        MainAppScreen(alarmScreenViewModel,navController,darkTheme){
             onThemeSwitchChange()
         }
     }
@@ -78,8 +76,6 @@ fun MainAppScreen(
     alarmScreenViewModel: AlarmScreenViewModel,
     appNavController: NavHostController,
     darkTheme: Boolean,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm: (Alarm) -> Unit,
     onThemeSwitchChange: () -> Unit
 ) {
     var doubleBackToExitPressedOnce = false
@@ -205,7 +201,7 @@ fun MainAppScreen(
 
     ) {
         Box(modifier = Modifier.padding(it)){
-            BottomNavigation(alarmScreenViewModel , navController,appNavController,addAlarm,removeAlarm)
+            BottomNavigation(alarmScreenViewModel , navController,appNavController)
         }
         //Back Handler
         BackHandler(onBack = {

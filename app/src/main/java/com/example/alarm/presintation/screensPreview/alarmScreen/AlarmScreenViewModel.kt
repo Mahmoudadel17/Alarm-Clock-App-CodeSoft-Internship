@@ -2,9 +2,11 @@ package com.example.alarm.presintation.screensPreview.alarmScreen
 
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alarm.data.local.Alarm
+import com.example.alarm.domain.alarmManagerRing.AlarmManager
 import com.example.alarm.domain.repositorys.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmScreenViewModel @Inject constructor
-    (private val repo: AlarmRepository ) : ViewModel() {
+    (private val repo: AlarmRepository,private val alarmManager: AlarmManager) : ViewModel() {
 
     private  val _alarms: MutableStateFlow<List<Alarm>> = MutableStateFlow(emptyList())
     val alarms = _alarms.asStateFlow()
@@ -38,13 +40,13 @@ class AlarmScreenViewModel @Inject constructor
     }
 
 
-    fun onToggleClick(alarm: Alarm, addAlarm: (Alarm) -> Unit, removeAlarm: (Alarm) -> Unit){
+    fun onToggleClick(context:Context, alarm: Alarm){
         alarm.isOn = alarm.isOn.not()
         //remove or make alarm from AlarmManager
         if (alarm.isOn){
-            addAlarm(alarm)
+            alarmManager.addNewAlarm(context,alarm)
         }else{
-            removeAlarm(alarm)
+            alarmManager.removeAlarm(context,alarm)
         }
         // update alarm in database
         viewModelScope.launch(Dispatchers.IO){

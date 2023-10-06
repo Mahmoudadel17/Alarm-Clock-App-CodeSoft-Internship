@@ -28,32 +28,27 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.alarm.data.local.Alarm
 import com.example.alarm.presintation.components.AlarmName
 import com.example.alarm.presintation.components.RepeatedSwitcher
 import com.example.alarm.presintation.components.RingtoneSelection
 import com.example.alarm.presintation.components.TimeShowSelected
 import com.example.alarm.presintation.components.TitleNewOrUpdate
-import com.example.alarm.presintation.components.clockScreenComponents.shadowCircular
 
 @Composable
 fun UpdateAlarmScreen(
     vm: UpdateScreenViewModel,
     navController: NavHostController,
     alarmId:Int,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm:(Alarm) -> Unit
 ) {
     vm.setAlarmNeededToUpdated(alarmId)
-    UpdateAlarmScreenPreview(vm,navController,addAlarm,removeAlarm)
+    UpdateAlarmScreenPreview(vm,navController)
 }
 
 @Composable
 fun UpdateAlarmScreenPreview(
     vm: UpdateScreenViewModel,
     navController: NavHostController,
-    addAlarm: (Alarm) -> Unit,
-    removeAlarm: (Alarm) -> Unit
+
 ) {
     val state = vm.state.value
     val showDialog by vm.showDialog.collectAsState()
@@ -67,7 +62,7 @@ fun UpdateAlarmScreenPreview(
     )
     {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            TitleNewOrUpdate("Update",{vm.onCloseIconClick(navController)},{vm.onCompleteIconClick(navController,addAlarm,removeAlarm)})
+            TitleNewOrUpdate("Update",{vm.onCloseIconClick(navController)},{vm.onCompleteIconClick(context,navController)})
             TimeShowSelected(context,state.hour,state.minute){hour,minute -> vm.onTimeSelected(hour, minute)}
             AlarmName(state.name){
                 vm.onAlarmNameChange(it)
@@ -81,7 +76,7 @@ fun UpdateAlarmScreenPreview(
             }
             DeleteAlarmButton { vm.onShowDialogDelete() }
         }
-        DeleteConfirmationDialog(showDialog,{vm.onAlarmDelete(navController,removeAlarm)}){
+        DeleteConfirmationDialog(showDialog,{vm.onAlarmDelete(context,navController)}){
             vm.onDismissDialogDelete()
         }
     }
